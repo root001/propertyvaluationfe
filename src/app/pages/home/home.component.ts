@@ -20,13 +20,30 @@ import {MatButtonModule} from '@angular/material/button';
   styleUrl: './home.component.css'
 })
 export class HomeComponent {
+  ininame:String = "John Doe";
+
   firstFormGroup = this._formBuilder.group({
     firstCtrl: ['', Validators.required],
   });
   secondFormGroup = this._formBuilder.group({
     secondCtrl: ['', Validators.required],
   });
+  ThirdFormGroup = this._formBuilder.group({
+    thirdCtrl: ['', Validators.required],
+  });
   isEditable = false;
 
   constructor(private _formBuilder: FormBuilder) {}
+
+  
+  userObj:User = { "name":"John Doe", "age":"12"};
+}
+
+export class User { 
+  name: string;
+  age: string;
+  constructor() {
+    this.name = '';
+    this.age = '';
+  } 
 }

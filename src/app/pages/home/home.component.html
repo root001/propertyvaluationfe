@@ -1,15 +1,25 @@
 <div class="main">
-    Property Valuation Forms
+    <div class="header col-md-12">
+        <h3>Property Valuation Form</h3>
+    
     <div class="forms col-md-12">
 
           <mat-stepper linear #stepper>
             <mat-step [stepControl]="firstFormGroup" >
               <form [formGroup]="firstFormGroup">
-                <ng-template matStepLabel>Fill out your name</ng-template>
+                <ng-template matStepLabel>Initiator's details</ng-template>
                 <mat-form-field>
-                  <mat-label>Name</mat-label>
-                  <input matInput formControlName="firstCtrl" placeholder="Last name, First name" required>
+                  <mat-label>Initiator name</mat-label>
+                  <input matInput formControlName="firstCtrl" [value]="userObj.name" required readonly>
                 </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Initiator business unit</mat-label>
+                    <input matInput formControlName="firstCtrl" placeholder="buisness unit ID" required>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Initiator contact number</mat-label>
+                    <input matInput formControlName="firstCtrl" placeholder="phone number" required>
+                  </mat-form-field>
                 <div>
                   <button mat-button matStepperNext>Next</button>
                 </div>
@@ -17,7 +27,7 @@
             </mat-step>
             <mat-step [stepControl]="secondFormGroup" >
               <form [formGroup]="secondFormGroup">
-                <ng-template matStepLabel>Fill out your address</ng-template>
+                <ng-template matStepLabel>Facility details</ng-template>
                 <mat-form-field>
                   <mat-label>Address</mat-label>
                   <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
@@ -29,8 +39,50 @@
                 </div>
               </form>
             </mat-step>
+            <mat-step [stepControl]="ThirdFormGroup" >
+                <form [formGroup]="ThirdFormGroup">
+                  <ng-template matStepLabel>Property Valuation</ng-template>
+                  <mat-form-field>
+                    <mat-label>Address</mat-label>
+                    <input matInput formControlName="thirdCtrl" placeholder="Ex. 1 Main St, New York, NY"
+                           required>
+                  </mat-form-field>
+                  <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button matStepperNext>Next</button>
+                  </div>
+                </form>
+              </mat-step>
+              <mat-step [stepControl]="ThirdFormGroup" >
+                <form [formGroup]="ThirdFormGroup">
+                  <ng-template matStepLabel>Borrower's details</ng-template>
+                  <mat-form-field>
+                    <mat-label>Address</mat-label>
+                    <input matInput formControlName="thirdCtrl" placeholder="Ex. 1 Main St, New York, NY"
+                           required>
+                  </mat-form-field>
+                  <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button matStepperNext>Next</button>
+                  </div>
+                </form>
+              </mat-step>
+              <mat-step [stepControl]="ThirdFormGroup" >
+                <form [formGroup]="ThirdFormGroup">
+                  <ng-template matStepLabel>Comments</ng-template>
+                  <mat-form-field>
+                    <mat-label>Address</mat-label>
+                    <input matInput formControlName="thirdCtrl" placeholder="Ex. 1 Main St, New York, NY"
+                           required>
+                  </mat-form-field>
+                  <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button matStepperNext>Next</button>
+                  </div>
+                </form>
+              </mat-step>
             <mat-step>
-              <ng-template matStepLabel>Done</ng-template>
+              <ng-template matStepLabel>Upload section</ng-template>
               <p>You are now done.</p>
               <div>
                 <button mat-button matStepperPrevious>Back</button>
@@ -39,6 +91,6 @@
             </mat-step>
           </mat-stepper>
           
-
+        </div>
     </div>
 </div>
