@@ -1,0 +1,17 @@
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+    background: #f7f5f5;
+    /* background-image: url(./bg.jpg); */
+}
+
+.container {
+    position: relative;
+    width: 256px;
+    height: 256px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,96 +1,261 @@
 <div class="main">
     <div class="header col-md-12">
         <h3>Property Valuation Form</h3>
-    
-    <div class="forms col-md-12">
 
-          <mat-stepper linear #stepper>
-            <mat-step [stepControl]="firstFormGroup" >
-              <form [formGroup]="firstFormGroup">
-                <ng-template matStepLabel>Initiator's details</ng-template>
-                <mat-form-field>
-                  <mat-label>Initiator name</mat-label>
-                  <input matInput formControlName="firstCtrl" [value]="userObj.name" required readonly>
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-label>Initiator business unit</mat-label>
-                    <input matInput formControlName="firstCtrl" placeholder="buisness unit ID" required>
-                </mat-form-field>
-                <mat-form-field>
-                    <mat-label>Initiator contact number</mat-label>
-                    <input matInput formControlName="firstCtrl" placeholder="phone number" required>
-                  </mat-form-field>
-                <div>
-                  <button mat-button matStepperNext>Next</button>
-                </div>
-              </form>
-            </mat-step>
-            <mat-step [stepControl]="secondFormGroup" >
-              <form [formGroup]="secondFormGroup">
-                <ng-template matStepLabel>Facility details</ng-template>
-                <mat-form-field>
-                  <mat-label>Address</mat-label>
-                  <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
-                         required>
-                </mat-form-field>
-                <div>
-                  <button mat-button matStepperPrevious>Back</button>
-                  <button mat-button matStepperNext>Next</button>
-                </div>
-              </form>
-            </mat-step>
-            <mat-step [stepControl]="ThirdFormGroup" >
-                <form [formGroup]="ThirdFormGroup">
-                  <ng-template matStepLabel>Property Valuation</ng-template>
-                  <mat-form-field>
-                    <mat-label>Address</mat-label>
-                    <input matInput formControlName="thirdCtrl" placeholder="Ex. 1 Main St, New York, NY"
-                           required>
-                  </mat-form-field>
-                  <div>
-                    <button mat-button matStepperPrevious>Back</button>
-                    <button mat-button matStepperNext>Next</button>
-                  </div>
-                </form>
-              </mat-step>
-              <mat-step [stepControl]="ThirdFormGroup" >
-                <form [formGroup]="ThirdFormGroup">
-                  <ng-template matStepLabel>Borrower's details</ng-template>
-                  <mat-form-field>
-                    <mat-label>Address</mat-label>
-                    <input matInput formControlName="thirdCtrl" placeholder="Ex. 1 Main St, New York, NY"
-                           required>
-                  </mat-form-field>
-                  <div>
-                    <button mat-button matStepperPrevious>Back</button>
-                    <button mat-button matStepperNext>Next</button>
-                  </div>
-                </form>
-              </mat-step>
-              <mat-step [stepControl]="ThirdFormGroup" >
-                <form [formGroup]="ThirdFormGroup">
-                  <ng-template matStepLabel>Comments</ng-template>
-                  <mat-form-field>
-                    <mat-label>Address</mat-label>
-                    <input matInput formControlName="thirdCtrl" placeholder="Ex. 1 Main St, New York, NY"
-                           required>
-                  </mat-form-field>
-                  <div>
-                    <button mat-button matStepperPrevious>Back</button>
-                    <button mat-button matStepperNext>Next</button>
-                  </div>
-                </form>
-              </mat-step>
-            <mat-step>
-              <ng-template matStepLabel>Upload section</ng-template>
-              <p>You are now done.</p>
-              <div>
-                <button mat-button matStepperPrevious>Back</button>
-                <button mat-button (click)="stepper.reset()">Reset</button>
-              </div>
-            </mat-step>
-          </mat-stepper>
-          
+        <div class="forms col-md-12">
+            <mat-stepper linear #stepper>
+                <mat-step [stepControl]="InitiatorFormGroup">
+                    <form [formGroup]="InitiatorFormGroup">
+                        <ng-template matStepLabel>Initiator's details</ng-template>
+                        <mat-form-field>
+                            <mat-label>Initiator name</mat-label>
+                            <input matInput formControlName="initiatorName" [value]="userObj.name" required readonly>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Initiator business unit</mat-label>
+                            <input matInput formControlName="businessUnit" placeholder="business unit ID" required>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Initiator contact number</mat-label>
+                            <input type="tel" matInput formControlName="contactNumber" placeholder="phone number" required>
+                        </mat-form-field>
+                        <div>
+                            <button mat-button matStepperNext>Next</button>
+                        </div>
+                    </form>
+                </mat-step>
+                <mat-step [stepControl]="facilityFormGroup">
+                    <form [formGroup]="facilityFormGroup">
+                        <ng-template matStepLabel>Facility details</ng-template>
+                        <mat-form-field>
+                            <mat-label>Type of facility</mat-label>
+                            <mat-select formControlName="facilityType">
+                                <mat-option *ngFor="let option of facility" [value]="option.value">{{ option.viewValue }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Category</mat-label>
+                            <mat-select formControlName="category">
+                                <mat-option *ngFor="let option of category" [value]="option.value">{{ option.viewValue }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Purpose</mat-label>
+                            <mat-select formControlName="purpose">
+                                <mat-option *ngFor="let option of purpose" [value]="option.value">{{ option.viewValue }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Term(months)</mat-label>
+                            <input matInput formControlName="term" placeholder="3 months" required>
+                        </mat-form-field>
+                        <mat-form-field class="ccy">
+                            <mat-label>CCY</mat-label>
+                            <mat-select formControlName="currency">
+                                <mat-option *ngFor="let option of currency" [value]="option.value">{{ option.viewValue }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="amt">
+                            <mat-label>Amount</mat-label>
+                            <input type="currency" matInput formControlName="amount" placeholder="30" required>
+                        </mat-form-field>
+                        <section class="chck-section">
+                            <mat-checkbox formControlName="housingLoan" class="chck-margin">Housing Loan</mat-checkbox>
+                        </section>
+                        <div>
+                            <button mat-button matStepperPrevious>Back</button>
+                            <button mat-button matStepperNext>Next</button>
+                        </div>
+                    </form>
+                </mat-step>
+                <mat-step [stepControl]="propertyFormGroup">
+                    <form [formGroup]="propertyFormGroup">
+                        <ng-template matStepLabel>Property Valuation</ng-template>
+                        <section class="radio-section">
+                            <mat-radio-group formControlName="isFosRef">
+                                <mat-radio-button class="radio-margin" value="fosRef">FOS Ref</mat-radio-button>
+                            </mat-radio-group>
+                        </section>
+                        <mat-form-field>
+                            <mat-label>Type of valuation</mat-label>
+                            <mat-select formControlName="valuationType">
+                                <mat-option *ngFor="let option of evaluation" [value]="option.value">{{ option.viewValue }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field>
+                            <mat-label>Fos Ref No</mat-label>
+                            <input matInput formControlName="fosRefNo" placeholder="2010/09/0021" required>
+                        </mat-form-field>
+                        <div>
+                            <button mat-button matStepperPrevious>Back</button>
+                            <button mat-button matStepperNext>Next</button>
+                        </div>
+                    </form>
+                </mat-step>
+                <mat-step [stepControl]="userProfileForm">
+                    <form [formGroup]="userProfileForm">
+                        <ng-template matStepLabel>Borrower's details</ng-template>
+                        <!-- Personal Information Section -->
+                        <div formGroupName="personalInfo" class="nestedFb">
+                            <mat-form-field>
+                                <mat-label>Customer number</mat-label>
+                                <input matInput formControlName="customerNumber" placeholder="CR1001" required>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Customer name</mat-label>
+                                <input matInput formControlName="customerName" placeholder="Jake Sly" required>
+                            </mat-form-field>
+                            <mat-form-field class="br-textArea">
+                                <mat-label>Address</mat-label>
+                                <textarea matInput formControlName="customerAddress"></textarea>
+                                <!-- rows="4" cols="50" -->
+                              </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Contact No.</mat-label>
+                                <input matInput formControlName="contactNumber" placeholder="CR1001" required>
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Email</mat-label>
+                                <input matInput formControlName="customerEmail" placeholder="jake@gmail.com" required>
+                            </mat-form-field>
+                        </div>
+                        <!-- Address Section -->
+                        <div formGroupName="addresses">
+                            <div *ngFor="let addressGroup of addressGroups.controls; let i = index" [formGroupName]="i" class="nestedFb">
+                                <h2>Joint borrower - #{{ i + 1 }}</h2>
+                                <mat-form-field>
+                                    <mat-label>Customer number</mat-label>
+                                    <input matInput formControlName="jointCustomerNumber" placeholder="CR1001" required>
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label>Customer name</mat-label>
+                                    <input matInput formControlName="jointCustomerName" placeholder="Jake Sly" required>
+                                </mat-form-field>
+                                <mat-form-field class="br-textArea">
+                                    <mat-label>Address</mat-label>
+                                    <textarea matInput formControlName="jointCustomerAddress"></textarea>
+                                    <!-- rows="4" cols="50" -->
+                                  </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label>Contact No.</mat-label>
+                                    <input matInput formControlName="jointContactNumber" placeholder="CR1001" required>
+                                </mat-form-field>
+                                <mat-form-field>
+                                    <mat-label>Email</mat-label>
+                                    <input matInput formControlName="jointCustomerEmail" placeholder="jake@gmail.com" required>
+                                </mat-form-field>
+                                <div>
+                                    <button type="button" (click)="removeAddress(i)">Remove Address</button>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" (click)="addAddress()">Add Address</button>
+                    <!--   {{ userProfileForm.value | json }}   --> 
+                        <div>
+                            <button mat-button matStepperPrevious>Back</button>
+                            <button mat-button matStepperNext>Next</button>
+                        </div>
+                    </form>
+                </mat-step>
+                <mat-step [stepControl]="commentsFormGroup">
+                    <form [formGroup]="commentsFormGroup">
+                        <ng-template matStepLabel>Comments</ng-template>
+
+                        <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>Comments</mat-label>
+                            <textarea matInput formControlName="commentsAddress" rows="3"></textarea>
+                        </mat-form-field>
+                        <div class="comments-section">
+                        <h3>Previous comments</h3>
+                        <table mat-table [dataSource]="commentsData">
+                            <ng-container matColumnDef="date">
+                            <th mat-header-cell *matHeaderCellDef> Date </th>
+                            <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="user">
+                            <th mat-header-cell *matHeaderCellDef> User </th>
+                            <td mat-cell *matCellDef="let element"> {{element.user}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="comments">
+                            <th mat-header-cell *matHeaderCellDef> Comments </th>
+                            <td mat-cell *matCellDef="let element"> {{element.comments}} </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        </table>
+                        </div>
+
+                        <div>
+                            <button mat-button matStepperPrevious>Back</button>
+                            <button mat-button matStepperNext>Next</button>
+                        </div>
+                    </form>
+                </mat-step>
+                <mat-step [stepControl]="uploadFormGroup">
+                    <form [formGroup]="uploadFormGroup">
+                        <ng-template matStepLabel>Upload section</ng-template>
+                            <mat-form-field appearance="fill" class="full-width">
+                            <mat-label>Document type</mat-label>
+                            <mat-select formControlName="documentType">
+                                <mat-option *ngFor="let doc of documentTypes" [value]="doc">{{doc}}</mat-option>
+                            </mat-select>
+                            </mat-form-field>
+                            <div class="upload-section">
+                            <label for="fileUpload" class="file-upload-label">
+                                Drag and drop file to upload or
+                                <input type="file" id="fileUpload" (change)="onFileSelected($event)" hidden>
+                                <button mat-raised-button type="button" (click)="fileUpload.click()">Browse</button>
+                            </label>
+                            <div>Maximum size: 5MB. Allowed format: XLSX, PDF</div>
+                            </div>
+                            <div class="uploaded-documents">
+                            <h3>Uploaded documents</h3>
+                            <table mat-table [dataSource]="uploadedFiles">
+                                <ng-container matColumnDef="docType">
+                                <th mat-header-cell *matHeaderCellDef> Doc Type </th>
+                                <td mat-cell *matCellDef="let element"> {{element.docType}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="filename">
+                                <th mat-header-cell *matHeaderCellDef> Filename </th>
+                                <td mat-cell *matCellDef="let element"> {{element.filename}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="size">
+                                <th mat-header-cell *matHeaderCellDef> Size </th>
+                                <td mat-cell *matCellDef="let element"> {{element.size}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="uploadedBy">
+                                <th mat-header-cell *matHeaderCellDef> Uploaded by </th>
+                                <td mat-cell *matCellDef="let element"> {{element.uploadedBy}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="uploadedOn">
+                                <th mat-header-cell *matHeaderCellDef> Uploaded on </th>
+                                <td mat-cell *matCellDef="let element"> {{element.uploadedOn}} </td>
+                                </ng-container>
+                                <ng-container matColumnDef="actions">
+                                <th mat-header-cell *matHeaderCellDef> Actions </th>
+                                <td mat-cell *matCellDef="let element">
+                                    <button mat-icon-button (click)="downloadFile(element)">
+                                    <mat-icon>download</mat-icon>
+                                    </button>
+                                    <button mat-icon-button (click)="deleteFile(element)">
+                                    <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumnsUpload"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumnsUpload;"></tr>
+                            </table>
+                            </div>
+
+                        <div>
+                            <button mat-button matStepperPrevious>Back</button>
+                            <button mat-button type="submit">Submit</button>
+                            <button mat-button (click)="stepper.reset()">Reset</button>
+                        </div>
+                    </form>
+                </mat-step>
+
+            </mat-stepper>
         </div>
     </div>
 </div>

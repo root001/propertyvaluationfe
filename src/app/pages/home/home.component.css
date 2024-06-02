@@ -1,3 +1,8 @@
+.mat-stepper-horizontal{
+    background: #775959;
+    min-height: 350px;
+}
+
 .main {
     display: flex;
     justify-content: center;
@@ -6,6 +11,7 @@
     background: #f7f5f5;
     /* background-image: url(./bg.jpg); */
 }
+
 .container {
     position: relative;
     width: 256px;
@@ -17,12 +23,47 @@
 
 .mat-stepper-horizontal {
     margin-top: 8px;
-  }
+}
   
-  .mat-mdc-form-field {
+.mat-mdc-form-field {
     margin-top: 16px;
-  }
+}
 
 .mat-mdc-form-field{
     padding-right: 10%;
+}
+
+.ccy{
+    padding-right: 0;
+    max-width: 8%;
+}
+
+.amt{
+    max-width: 22%;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.comments-section {
+    margin-top: 20px;
+}
+
+.upload-section {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.file-upload-label {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.uploaded-documents {
+    margin-top: 20px;
+} 
+
+.br-textArea{
+   
 }
