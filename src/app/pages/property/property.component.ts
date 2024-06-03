@@ -18,12 +18,12 @@ throw new Error('Method not implemented.');
 }
 
   propertyData = [
-    { docType: 'Deed Charge', filename: 'my first file.pdf', size: '2MB', uploadedBy: 'USER001', uploadedOn: '12/12/2023 14:16' },
-    { docType: 'Site and Location plan', filename: 'my first file.xlsx', size: '15KB', uploadedBy: 'USER001', uploadedOn: '12/12/2023 14:16' },
-    { docType: 'Birth Certificate', filename: 'my first file.docx', size: '10KB', uploadedBy: 'USER001', uploadedOn: '12/12/2023 14:16' }
+    { reference: 'PV2023030093', receivedOn: '12/12/2023 14:16', borrowersName: 'John Doe', fosRef: '20/12901002', createdOn: '12/12/2023 14:16', modifiedOn: '12/12/2023 14:16' },
+    { reference: 'PV2023030095', receivedOn: '12/12/2023 14:16', borrowersName: 'Jack Ripper', fosRef: '22/12901002', createdOn: '12/12/2023 14:16', modifiedOn: '12/12/2023 14:16' },
+    { reference: 'PV2023030099', receivedOn: '12/12/2023 14:16', borrowersName: 'Jerkly Strange', fosRef: '20/12901094', createdOn: '12/12/2023 14:16', modifiedOn: '12/12/2023 14:16' }
   ];
 
-  displayTableColumns: string[] = ['docType', 'filename', 'size', 'uploadedBy', 'uploadedOn', 'actions'];
+  displayTableColumns: string[] = ['reference', 'receivedOn', 'borrowersName', 'fosRef', 'createdOn', 'modifiedOn', 'actions'];
 
 
 }
