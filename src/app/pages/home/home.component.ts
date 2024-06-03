@@ -10,6 +10,9 @@ import {MatRadioModule} from '@angular/material/radio';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
+import { appConstants } from '../../core/constants/constant';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import { DataServiceService } from '../../core/data-service.service';
 
 @Component({
   selector: 'app-home',
@@ -33,13 +36,9 @@ import { MatIconModule } from '@angular/material/icon';
 })
 
 export class HomeComponent implements OnInit {
-  InitiatorFormGroup!: FormGroup;
-  facilityFormGroup!: FormGroup;
-  propertyFormGroup!: FormGroup;
-  userProfileForm!: FormGroup;
-  commentsFormGroup!: FormGroup;
-  uploadFormGroup!: FormGroup;
   fileUpload!: any;
+  propFormGroup !: FormGroup;
+  dataService !: DataServiceService;
 
   commentsData = [
     { date: '12/12/2023 12:34', user: 'USER001', comments: 'This is a first user comment' },
@@ -47,11 +46,12 @@ export class HomeComponent implements OnInit {
   ];
 
   documentTypes = ['Deed Charge', 'Site and Location plan', 'National ID card', 'Quotation', 'Birth Certificate'];
-  uploadedFiles = [
+ /**  uploadedFiles = [
     { docType: 'Deed Charge', filename: 'my first file.pdf', size: '2MB', uploadedBy: 'USER001', uploadedOn: '12/12/2023 14:16' },
     { docType: 'Site and Location plan', filename: 'my first file.xlsx', size: '15KB', uploadedBy: 'USER001', uploadedOn: '12/12/2023 14:16' },
     { docType: 'Birth Certificate', filename: 'my first file.docx', size: '10KB', uploadedBy: 'USER001', uploadedOn: '12/12/2023 14:16' }
-  ];
+  ];*/
+  uploadedFiles: UploadedFile[] = [];
 
   displayedColumns: string[] = ['date', 'user', 'comments'];
   displayedColumnsUpload: string[] = ['docType', 'filename', 'size', 'uploadedBy', 'uploadedOn', 'actions'];
@@ -86,7 +86,7 @@ export class HomeComponent implements OnInit {
     {value: 'existing', viewValue: 'Existing'},
   ];
 
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private formBuilder: FormBuilder, private snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     this.initializeForms();
@@ -94,48 +94,46 @@ export class HomeComponent implements OnInit {
   }
 
   private initializeForms(): void {
-    this.InitiatorFormGroup = this.formBuilder.group({
-      initiatorName: [{ value: this.userObj.name, disabled: true }, Validators.required],
-      businessUnit: ['', Validators.required],
-      contactNumber: ['', Validators.required]
-    });
 
-    this.facilityFormGroup = this.formBuilder.group({
-      facilityType: ['', Validators.required],
-      category: ['', Validators.required],
-      purpose: ['', Validators.required],
-      term: ['', Validators.required],
-      currency: [this.currency[0].value, Validators.required],
-      amount: ['', Validators.required],
-      housingLoan: [false, Validators.required]
+    this.propFormGroup = this.formBuilder.group({
+      steps: this.formBuilder.group({
+        InitiatorFormGroup: this.formBuilder.group({
+          initiatorName: [{ value: this.userObj.name, disabled: true }, Validators.required],
+          businessUnit: ['', Validators.required],
+          contactNumber: ['', Validators.required],
+        }),
+        facilityFormGroup: this.formBuilder.group({
+          facilityType: ['', Validators.required],
+          category: ['', Validators.required],
+          purpose: ['', Validators.required],
+          term: ['', Validators.required],
+          currency: ['', Validators.required],
+          amount: ['', Validators.required],
+          housingLoan: [false]
+        }),
+        propertyFormGroup: this.formBuilder.group({
+          isFosRef: ['', Validators.required],
+          valuationType: ['', Validators.required],
+          fosRefNo: ['', Validators.required],
+        }),
+        userProfileForm: this.formBuilder.group({
+          personalInfo: this.formBuilder.group({
+            customerNumber: ['', Validators.required],
+            customerName: ['', Validators.required],
+            customerAddress: [''],
+            contactNumber: ['', Validators.required],
+            customerEmail: ['', Validators.required],
+          }),
+          addresses: this.formBuilder.array([this.createAddressGroup()])
+        }),
+        commentsFormGroup: this.formBuilder.group({
+          commentsAddress: ['']
+        }),
+        uploadFormGroup: this.formBuilder.group({
+          documentType: ['', Validators.required]
+        })
+      })
     });
-
-    this.propertyFormGroup = this.formBuilder.group({
-      isFosRef: [''],
-      valuationType: ['', Validators.required],
-      fosRefNo: ['', Validators.required]
-    });
-
-    this.userProfileForm = this.formBuilder.group({
-      personalInfo: this.formBuilder.group({
-        customerNumber: ['', Validators.required],
-        customerName: ['', Validators.required],
-        customerAddress: ['', Validators.required],
-        contactNumber: ['', Validators.required],
-        customerEmail: ['', Validators.required]
-      }),
-      addresses: this.formBuilder.array([this.createAddressGroup()])
-    });
-
-    this.commentsFormGroup = this.formBuilder.group({
-      commentsAddress: ['', Validators.required]
-    });
-
-    this.uploadFormGroup = this.formBuilder.group({
-      documentType: ['', Validators.required]
-    });
-
-    
   }
 
   private createAddressGroup(): FormGroup {
@@ -148,8 +146,12 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  getFormGroup(groupName: string, subGroupName: string): FormGroup {
+    return (this.propFormGroup.get(groupName) as FormGroup).get(subGroupName) as FormGroup;
+  }
+
   get addressGroups(): FormArray {
-    return this.userProfileForm.get('addresses') as FormArray;
+    return this.propFormGroup.get('steps')!.get('userProfileForm')!.get('addresses') as FormArray;
   }
 
   addAddress(): void {
@@ -163,24 +165,83 @@ export class HomeComponent implements OnInit {
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {
-      console.log('Selected file:', file);
-      // Handle file upload logic here
+      const documentType = this.propFormGroup.get('steps.uploadStep.documentType')?.value;
+      const uploadedOn = new Date().toISOString();
+      const newFile: UploadedFile = {
+        docType: documentType,
+        filename: file.name,
+        size: this.formatBytes(file.size),
+        uploadedBy: 'USER001',
+        uploadedOn,
+        fileData: file
+      };
+      this.uploadedFiles.push(newFile);
+      console.log('File uploaded:', newFile);
     }
   }
 
-  downloadFile(element: any): void {
-    console.log('Download file:', element);
-    // Handle file download logic here
+  downloadFile(element: UploadedFile): void {
+    const blob = new Blob([element.fileData], { type: element.fileData.type });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = element.filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    console.log('File downloaded:', element);
   }
 
-  deleteFile(element: any): void {
-    console.log('Delete file:', element);
-    // Handle file delete logic here
+  deleteFile(element: UploadedFile): void {
+    const index = this.uploadedFiles.indexOf(element);
+    if (index >= 0) {
+      this.uploadedFiles.splice(index, 1);
+      console.log('File deleted:', element);
+    }
   }
 
   onSubmit(): void {
-  //  console.log('Form submitted:', this.formGroup.value);
+    const formData = new FormData();
+    console.log(this.propFormGroup.value);
     // Handle form submission logic here
+    formData.append('comments', this.propFormGroup.get('steps.commentsStep.comments')?.value);
+    this.uploadedFiles.forEach((file, index) => {
+      formData.append(`files[${index}][docType]`, file.docType);
+      formData.append(`files[${index}][filename]`, file.filename);
+      formData.append(`files[${index}][size]`, file.size);
+      formData.append(`files[${index}][uploadedBy]`, file.uploadedBy);
+      formData.append(`files[${index}][uploadedOn]`, file.uploadedOn);
+      formData.append(`files[${index}][fileData]`, file.fileData, file.filename);
+    });
+
+    const postRequest = {
+      url: appConstants.baseUrl + appConstants.facilityEndpoint,
+      data: formData
+    };
+    this.dataService.postAPI(postRequest).subscribe(
+      (response: any) => {
+        if (response) {
+          console.log('Form submitted successfully', response);
+          this.snackBar.open(appConstants.createSuccessMsg, 'close', {
+            duration: 3000
+          });
+        }
+      },
+      error => {
+        console.error('Form submission error', error);
+        this.snackBar.open('Form submission failed', 'close', {
+          duration: 3000
+        });
+      });
+
+  }
+
+  private formatBytes(bytes: number, decimals = 2): string {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const dm = decimals < 0 ? 0 : decimals;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
   }
 }
 
@@ -192,4 +253,13 @@ interface StringProp {
 interface NumStringProp {
   value: Number;
   viewValue: string;
+}
+
+interface UploadedFile {
+  docType: string;
+  filename: string;
+  size: string;
+  uploadedBy: string;
+  uploadedOn: string;
+  fileData: Blob;
 }

@@ -1,7 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { appConstants } from '../../core/constants/constant';
 import {MatSnackBar} from '@angular/material/snack-bar';
@@ -9,7 +7,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, HttpClientModule],
+  imports: [FormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -17,7 +15,7 @@ export class LoginComponent {
 
   loginObject: Login;
 
-  constructor(private http: HttpClient, private router: Router, private snackBar: MatSnackBar) {
+  constructor(private router: Router, private snackBar: MatSnackBar) {
     this.loginObject = new Login();
   }
   
@@ -25,7 +23,7 @@ export class LoginComponent {
   onLogin() {
   //  debugger;
     /**
-     * this.http.post(appConstants.baseUrl+appConstants.loginEndpoint, this.loginObject).subscribe((res:any)=>{
+     * this.httpClient.post(appConstants.baseUrl+appConstants.loginEndpoint, this.loginObject).subscribe((res:any)=>{
       if(res.result) {
         alert(appConstants.loginSuccessMsg);
         localStorage.setItem('token', res.data.token)
