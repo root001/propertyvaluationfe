@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { appConstants } from '../../core/constants/constant';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import { DataServiceService } from '../../core/data-service.service';
 
 @Component({
   selector: 'app-login',
@@ -12,40 +13,41 @@ import {MatSnackBar} from '@angular/material/snack-bar';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-
   loginObject: Login;
 
-  constructor(private router: Router, private snackBar: MatSnackBar) {
+  constructor(private router: Router, private snackBar: MatSnackBar, private dataService:DataServiceService) {
     this.loginObject = new Login();
   }
   
-
   onLogin() {
   //  debugger;
-    /**
-     * this.httpClient.post(appConstants.baseUrl+appConstants.loginEndpoint, this.loginObject).subscribe((res:any)=>{
-      if(res.result) {
-        alert(appConstants.loginSuccessMsg);
-        localStorage.setItem('token', res.data.token)
-        this.router.navigateByUrl(appConstants.landingPage)
-      } else {
-        alert(res.message)
-      }
-    })
-     */
-    this.snackBar.open(appConstants.loginSuccessMsg, 'close', {
-      duration: 3000
-    });
-    console.log("logging in user");
-    this.router.navigateByUrl(appConstants.landingPage);
+    let postRequest = {
+      url: appConstants.baseUrl + appConstants.loginEndpoint,
+      data: this.loginObject
+    };
+    this.dataService.postAPI(postRequest).subscribe(
+      (response: any) => {
+        if (response) {
+          localStorage.setItem('token', response.token)
+          this.snackBar.open(appConstants.loginSuccessMsg, 'close', {
+            duration: 3000
+          });
+          this.router.navigateByUrl(appConstants.landingPage);
+        }
+      },
+      error => {
+        this.snackBar.open(appConstants.loginErrorMsg, 'close', {
+          duration: 3000
+        });
+      });
   }
 }
 
 export class Login { 
-    User: string;
-    Password: string;
+    username: string;
+    password: string;
     constructor() {
-      this.User = '';
-      this.Password = '';
+      this.username = '';
+      this.password = '';
     } 
 }

@@ -2,8 +2,9 @@
 
 export const appConstants = {
     'baseUrl' : 'http://localhost:8080',
-    'loginEndpoint' : '/login',
+    'loginEndpoint' : '/api/v1/auth/login',
     'loginSuccessMsg' : 'Login Successful.',
+    'loginErrorMsg' : 'Login failed. Kindly check your credentials and try again.',
     'landingPage' : '/dashboard',
     'facilityEndpoint' : '/facility',
     'createSuccessMsg' : 'Facility Successful Created.',
