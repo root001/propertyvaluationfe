@@ -38,7 +38,7 @@ import { DataServiceService } from '../../core/data-service.service';
 export class HomeComponent implements OnInit {
   fileUpload!: any;
   propFormGroup !: FormGroup;
-  dataService !: DataServiceService;
+  userObject !: any;
 
   commentsData = [
     { date: '12/12/2023 12:34', user: 'USER001', comments: 'This is a first user comment' },
@@ -86,11 +86,39 @@ export class HomeComponent implements OnInit {
     {value: 'existing', viewValue: 'Existing'},
   ];
 
-  constructor(private formBuilder: FormBuilder, private snackBar: MatSnackBar) {}
+  constructor(private formBuilder: FormBuilder, private snackBar: MatSnackBar, private dataService:DataServiceService) {}
 
   ngOnInit(): void {
+    this.fetchUserDetails();
     this.initializeForms();
     this.fileUpload = {};
+  }
+
+  /**
+   * 
+   */
+  private fetchUserDetails():void {
+
+    const getRequest = {
+      url: appConstants.baseUrl + appConstants.userEndpoint + localStorage.getItem('userid')
+    };
+    this.dataService.getApi(getRequest).subscribe(
+      (response: any) => {
+        if (response) {
+          this.userObject = response;
+          console.log('Form submitted successfully', response);
+          console.log('user object : ',this.userObject);
+          this.snackBar.open(appConstants.createSuccessMsg, 'close', {
+            duration: 3000
+          });
+        }
+      },
+      error => {
+        console.error('Form submission error', error);
+        this.snackBar.open('Form submission failed', 'close', {
+          duration: 3000
+        });
+      });
   }
 
   private initializeForms(): void {

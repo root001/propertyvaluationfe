@@ -8,4 +8,6 @@ export const appConstants = {
     'landingPage' : '/dashboard',
     'facilityEndpoint' : '/facility',
     'createSuccessMsg' : 'Facility Successful Created.',
+
+    'userEndpoint' : '/api/v1/users/',
 }

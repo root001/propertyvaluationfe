@@ -28,7 +28,9 @@ export class LoginComponent {
     this.dataService.postAPI(postRequest).subscribe(
       (response: any) => {
         if (response) {
-          localStorage.setItem('token', response.token)
+          localStorage.setItem('token', response.body.token);
+          localStorage.setItem('userid', response.body.id);
+          localStorage.setItem('username', response.body.username);
           this.snackBar.open(appConstants.loginSuccessMsg, 'close', {
             duration: 3000
           });
